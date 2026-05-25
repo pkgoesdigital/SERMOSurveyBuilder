@@ -15,15 +15,20 @@ export default function ThemeToggle() {
         minHeight: 44,
         display: 'inline-flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        gap: 8,
+        padding: '0 14px',
         background: 'var(--color-surface)',
         border: '1px solid var(--color-border)',
         borderRadius: 9999,
         cursor: 'pointer',
         color: 'var(--color-text)',
+        fontSize: 14,
+        fontFamily: 'inherit',
+        whiteSpace: 'nowrap',
       }}
     >
       {isDark ? '☀️' : '🌙'}
+      <span>Light/Dark Mode</span>
     </button>
   )
 }

@@ -1,0 +1,45 @@
+/* CSS custom properties — light theme defaults */
+:root {
+  --color-bg: #F9F8F6;
+  --color-surface: #FFFFFF;
+  --color-text: #1a1a2e;
+  --color-text-muted: #494f59;
+  --color-accent: #14857b;
+  --color-border: #e2e8f0;
+
+  /* Question type accent colors */
+  --type-color-single: #6366f1;
+  --type-color-multi: #f59e0b;
+  --type-color-numeric: #10b981;
+  --type-color-grid: #ec4899;
+}
+
+[data-theme="dark"] {
+  --color-bg: #18181f;
+  --color-surface: #1f1f28;
+  --color-text: #c8c8d2;
+  --color-text-muted: #858595;
+  --color-accent: #1eb8ab;
+  --color-border: #2d2d3a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}

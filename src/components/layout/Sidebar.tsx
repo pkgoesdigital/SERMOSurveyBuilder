@@ -3,7 +3,16 @@ import QuestionRow from '../builder/QuestionRow'
 import AddQuestionMenu from '../builder/AddQuestionMenu'
 
 export default function Sidebar() {
-  const { survey, activeQuestionId, setActiveQuestionId } = useSurvey()
+  const { survey, activeQuestionId, setActiveQuestionId, deleteQuestion } = useSurvey()
+
+  function handleDelete(id: string) {
+    if (activeQuestionId === id) {
+      const idx = survey.questions.findIndex((q) => q.id === id)
+      const next = survey.questions[idx + 1] ?? survey.questions[idx - 1] ?? null
+      setActiveQuestionId(next?.id ?? null)
+    }
+    deleteQuestion(id)
+  }
 
   return (
     <aside
@@ -26,6 +35,7 @@ export default function Sidebar() {
               index={i}
               isActive={q.id === activeQuestionId}
               onSelect={() => setActiveQuestionId(q.id)}
+              onDelete={() => handleDelete(q.id)}
             />
           </li>
         ))}

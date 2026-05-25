@@ -8,14 +8,22 @@ describe('QuestionRow', () => {
   const q = { ...singleSelect.defaultQuestion(), text: 'Favourite color?' }
 
   it('renders the question text', () => {
-    render(<QuestionRow question={q} index={0} isActive={false} onSelect={() => {}} />)
+    render(<QuestionRow question={q} index={0} isActive={false} onSelect={() => {}} onDelete={() => {}} />)
     expect(screen.getByText('Favourite color?')).toBeInTheDocument()
   })
 
   it('calls onSelect when clicked', async () => {
     const onSelect = vi.fn()
-    render(<QuestionRow question={q} index={0} isActive={false} onSelect={onSelect} />)
-    await userEvent.click(screen.getByRole('button'))
+    render(<QuestionRow question={q} index={0} isActive={false} onSelect={onSelect} onDelete={() => {}} />)
+    await userEvent.click(screen.getByLabelText('Question 1: Favourite color?'))
     expect(onSelect).toHaveBeenCalledOnce()
+  })
+
+  it('calls onDelete when trash button is clicked', async () => {
+    const onDelete = vi.fn()
+    render(<QuestionRow question={q} index={0} isActive={false} onSelect={() => {}} onDelete={onDelete} />)
+    await userEvent.hover(screen.getByRole('row'))
+    await userEvent.click(screen.getByLabelText('Delete question 1'))
+    expect(onDelete).toHaveBeenCalledOnce()
   })
 })

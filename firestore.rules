@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ⚠️  PROOF-OF-CONCEPT ONLY — open read/write on surveys collection.
+    // Tighten before any real deployment (see README security note).
+    match /surveys/{surveyId} {
+      allow read, write: if true;
+    }
+  }
+}

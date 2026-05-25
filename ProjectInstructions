@@ -1,0 +1,14 @@
+The fastest path forward:
+Start Claude Code at /Users/paulaklimas/Developer/SERMOSurveyBuilder, then open a session and paste this as your first prompt:
+
+"I'm starting a new project. I'll paste the project spec and file scaffold now. Your job is to create all files on disk exactly as specified, then confirm with npm install && npm run dev that the project boots."
+
+Then paste the contents of each artifact in order:
+
+CLAUDE.md — paste first, tell it to write to ./CLAUDE.md
+README.md
+File tree — tell it to create all directories and empty stub files
+Key stubs (types.ts, registry.ts, etc.) — tell it to write each to its correct path
+single-select.tsx — tell it to use this as the template and implement all four question types
+
+Claude Code will write everything to disk, run npm install, and boot the dev server. From that point on, CLAUDE.md is on disk and every future Claude Code session in that directory will read it automatically on startup.

@@ -1,23 +1,30 @@
+import { doc, setDoc, getDoc, getDocs, deleteDoc, collection } from 'firebase/firestore'
+import { db } from './firebase'
 import type { Survey } from './types'
 
-const store = new Map<string, Survey>()
+const COLLECTION = 'surveys'
 
 export const storage = {
   async saveSurvey(survey: Survey): Promise<void> {
-    store.set(survey.id, { ...survey, updatedAt: new Date().toISOString() })
+    await setDoc(doc(db, COLLECTION, survey.id), {
+      ...survey,
+      updatedAt: new Date().toISOString(),
+    })
   },
 
   async loadSurvey(id: string): Promise<Survey | null> {
-    return store.get(id) ?? null
+    const snap = await getDoc(doc(db, COLLECTION, id))
+    return snap.exists() ? (snap.data() as Survey) : null
   },
 
   async listSurveys(): Promise<Survey[]> {
-    return Array.from(store.values()).sort(
-      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-    )
+    const snap = await getDocs(collection(db, COLLECTION))
+    return snap.docs
+      .map((d) => d.data() as Survey)
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
   },
 
   async deleteSurvey(id: string): Promise<void> {
-    store.delete(id)
+    await deleteDoc(doc(db, COLLECTION, id))
   },
 }

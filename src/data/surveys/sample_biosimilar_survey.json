@@ -1,0 +1,121 @@
+{
+  "id": "sample-001",
+  "title": "Biosimilar Adoption in Clinical Practice",
+  "exportedAt": "2026-05-25T00:00:00.000Z",
+  "questions": [
+    {
+      "index": 1,
+      "id": "q1",
+      "type": "single-select",
+      "text": "What is your primary clinical specialty?",
+      "description": "Select the specialty that best describes your current practice.",
+      "required": true,
+      "options": [
+        { "id": "q1-a", "text": "Rheumatology" },
+        { "id": "q1-b", "text": "Oncology / Hematology" },
+        { "id": "q1-c", "text": "Gastroenterology" },
+        { "id": "q1-d", "text": "Dermatology" },
+        { "id": "q1-e", "text": "Neurology" },
+        { "id": "q1-f", "text": "Other" }
+      ]
+    },
+    {
+      "index": 2,
+      "id": "q2",
+      "type": "numeric",
+      "text": "Approximately how many patients do you currently manage on a biologic therapy?",
+      "description": "Enter your best estimate. Include all active patients across indications.",
+      "required": true,
+      "min": 0,
+      "max": 2000
+    },
+    {
+      "index": 3,
+      "id": "q3",
+      "type": "single-select",
+      "text": "In the past 12 months, have you initiated a patient on a biosimilar as a first-line biologic therapy (not a switch from an originator)?",
+      "required": true,
+      "options": [
+        { "id": "q3-a", "text": "Yes, for multiple patients" },
+        { "id": "q3-b", "text": "Yes, for one patient" },
+        { "id": "q3-c", "text": "No" },
+        { "id": "q3-d", "text": "Not applicable — I do not prescribe biologics" }
+      ]
+    },
+    {
+      "index": 4,
+      "id": "q4",
+      "type": "multi-select",
+      "text": "Which of the following factors most influence your decision to prescribe a biosimilar over an originator biologic?",
+      "description": "Select all that apply.",
+      "required": true,
+      "options": [
+        { "id": "q4-a", "text": "Lower patient out-of-pocket cost" },
+        { "id": "q4-b", "text": "Formulary placement or payer mandate" },
+        { "id": "q4-c", "text": "Clinical evidence supporting interchangeability" },
+        { "id": "q4-d", "text": "Institution or health system guidance" },
+        { "id": "q4-e", "text": "Patient preference or acceptance" },
+        { "id": "q4-f", "text": "My own confidence in the biosimilar's efficacy and safety profile" }
+      ]
+    },
+    {
+      "index": 5,
+      "id": "q5",
+      "type": "multi-select",
+      "text": "What are your primary barriers to prescribing biosimilars in your practice?",
+      "description": "Select all that apply.",
+      "required": true,
+      "options": [
+        { "id": "q5-a", "text": "Concerns about immunogenicity differences" },
+        { "id": "q5-b", "text": "Lack of long-term real-world safety data" },
+        { "id": "q5-c", "text": "Patient resistance to switching from an originator" },
+        { "id": "q5-d", "text": "Complexity of prior authorization requirements" },
+        { "id": "q5-e", "text": "Insufficient education or familiarity with available biosimilars" },
+        { "id": "q5-f", "text": "No significant barriers — I prescribe biosimilars routinely" }
+      ]
+    },
+    {
+      "index": 6,
+      "id": "q6",
+      "type": "grid",
+      "text": "For each of the following biosimilar classes, how would you rate your current confidence in prescribing?",
+      "description": "Select one response per row.",
+      "required": true,
+      "rows": [
+        "TNF inhibitors (e.g., adalimumab, etanercept biosimilars)",
+        "Anti-CD20 agents (e.g., rituximab biosimilars)",
+        "VEGF inhibitors (e.g., bevacizumab biosimilars)",
+        "Granulocyte colony-stimulating factors (e.g., filgrastim biosimilars)"
+      ],
+      "columns": [
+        "Not confident",
+        "Somewhat confident",
+        "Confident",
+        "Very confident",
+        "Not applicable to my practice"
+      ]
+    },
+    {
+      "index": 7,
+      "id": "q7",
+      "type": "single-select",
+      "text": "How would you characterize your institution's current policy on biosimilar substitution without prescriber notification?",
+      "required": true,
+      "options": [
+        { "id": "q7-a", "text": "Permitted — substitution occurs automatically at the pharmacy level" },
+        { "id": "q7-b", "text": "Permitted with notification — I am informed after substitution" },
+        { "id": "q7-c", "text": "Not permitted — substitution requires my explicit approval" },
+        { "id": "q7-d", "text": "No formal policy exists at my institution" },
+        { "id": "q7-e", "text": "I am not aware of my institution's policy" }
+      ]
+    }
+  ],
+  "branchingRules": [
+    {
+      "id": "br1",
+      "sourceQuestionId": "q3",
+      "answerId": "q3-d",
+      "targetQuestionId": "q7"
+    }
+  ]
+}

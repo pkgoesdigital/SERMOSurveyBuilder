@@ -5,7 +5,7 @@ import {
   useCallback,
   type ReactNode,
 } from 'react'
-import type { Survey, Question } from '../lib/types'
+import type { Survey, Question, BranchingRule } from '../lib/types'
 import { generateId } from '../lib/utils'
 
 interface SurveyContextValue {
@@ -17,6 +17,9 @@ interface SurveyContextValue {
   reorderQuestions: (fromIndex: number, toIndex: number) => void
   activeQuestionId: string | null
   setActiveQuestionId: (id: string | null) => void
+  addBranchingRule: (rule: BranchingRule) => void
+  updateBranchingRule: (id: string, updates: Partial<BranchingRule>) => void
+  deleteBranchingRule: (id: string) => void
 }
 
 const SurveyContext = createContext<SurveyContextValue | null>(null)
@@ -81,6 +84,30 @@ export function SurveyProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  const addBranchingRule = useCallback((rule: BranchingRule) => {
+    setSurvey((s) => touch({ ...s, branchingRules: [...s.branchingRules, rule] }))
+  }, [])
+
+  const updateBranchingRule = useCallback(
+    (id: string, updates: Partial<BranchingRule>) => {
+      setSurvey((s) =>
+        touch({
+          ...s,
+          branchingRules: s.branchingRules.map((r) =>
+            r.id === id ? { ...r, ...updates } : r,
+          ),
+        }),
+      )
+    },
+    [],
+  )
+
+  const deleteBranchingRule = useCallback((id: string) => {
+    setSurvey((s) =>
+      touch({ ...s, branchingRules: s.branchingRules.filter((r) => r.id !== id) }),
+    )
+  }, [])
+
   return (
     <SurveyContext.Provider
       value={{
@@ -92,6 +119,9 @@ export function SurveyProvider({ children }: { children: ReactNode }) {
         reorderQuestions,
         activeQuestionId,
         setActiveQuestionId,
+        addBranchingRule,
+        updateBranchingRule,
+        deleteBranchingRule,
       }}
     >
       {children}

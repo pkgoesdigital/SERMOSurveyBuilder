@@ -5,7 +5,7 @@ import { useSurvey } from '../../contexts/SurveyContext'
 import { storage } from '../../lib/storage'
 import { encodeSurveyForShare } from '../../lib/export'
 
-type SaveState = 'idle' | 'saving' | 'saved'
+type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 type ShareState = 'idle' | 'copied'
 
 export default function Toolbar() {
@@ -15,8 +15,12 @@ export default function Toolbar() {
 
   const handleSave = async () => {
     setSaveState('saving')
-    await storage.saveSurvey(survey)
-    setSaveState('saved')
+    try {
+      await storage.saveSurvey(survey)
+      setSaveState('saved')
+    } catch {
+      setSaveState('error')
+    }
     setTimeout(() => setSaveState('idle'), 2000)
   }
 
@@ -32,7 +36,11 @@ export default function Toolbar() {
     }
   }
 
-  const saveLabel = saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? 'Saved ✓' : 'Save'
+  const saveLabel =
+    saveState === 'saving' ? 'Saving…' :
+    saveState === 'saved'  ? 'Saved ✓' :
+    saveState === 'error'  ? 'Save failed' :
+    'Save'
   const shareLabel = shareState === 'copied' ? 'Copied ✓' : 'Share'
 
   return (
@@ -60,7 +68,7 @@ export default function Toolbar() {
             minWidth: 80,
             borderRadius: 8,
             border: 'none',
-            background: 'var(--color-accent)',
+            background: saveState === 'error' ? '#ef4444' : 'var(--color-accent)',
             color: '#fff',
             fontSize: 14,
             fontWeight: 500,

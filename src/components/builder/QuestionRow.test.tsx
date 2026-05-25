@@ -26,4 +26,48 @@ describe('QuestionRow', () => {
     await userEvent.click(screen.getByLabelText('Delete question 1'))
     expect(onDelete).toHaveBeenCalledOnce()
   })
+
+  it('calls onMoveUp when up button is clicked', async () => {
+    const onMoveUp = vi.fn()
+    render(
+      <QuestionRow
+        question={q}
+        index={1}
+        isActive={false}
+        onSelect={() => {}}
+        onDelete={() => {}}
+        onMoveUp={onMoveUp}
+      />,
+    )
+    await userEvent.hover(screen.getByRole('row'))
+    await userEvent.click(screen.getByLabelText('Move question 2 up'))
+    expect(onMoveUp).toHaveBeenCalledOnce()
+  })
+
+  it('calls onMoveDown when down button is clicked', async () => {
+    const onMoveDown = vi.fn()
+    render(
+      <QuestionRow
+        question={q}
+        index={0}
+        isActive={false}
+        onSelect={() => {}}
+        onDelete={() => {}}
+        onMoveDown={onMoveDown}
+      />,
+    )
+    await userEvent.hover(screen.getByRole('row'))
+    await userEvent.click(screen.getByLabelText('Move question 1 down'))
+    expect(onMoveDown).toHaveBeenCalledOnce()
+  })
+
+  it('up button is disabled when onMoveUp is not provided', () => {
+    render(<QuestionRow question={q} index={0} isActive={false} onSelect={() => {}} onDelete={() => {}} />)
+    expect(screen.getByLabelText('Move question 1 up')).toBeDisabled()
+  })
+
+  it('down button is disabled when onMoveDown is not provided', () => {
+    render(<QuestionRow question={q} index={0} isActive={false} onSelect={() => {}} onDelete={() => {}} />)
+    expect(screen.getByLabelText('Move question 1 down')).toBeDisabled()
+  })
 })

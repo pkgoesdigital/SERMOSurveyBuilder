@@ -35,4 +35,53 @@ describe('SurveyContext', () => {
     })
     expect(result.current.survey.questions).toHaveLength(0)
   })
+
+  it('reorderQuestions moves a question to the target index', () => {
+    const { result } = renderHook(() => useSurvey(), { wrapper: SurveyProvider })
+    const q1 = singleSelect.defaultQuestion()
+    const q2 = singleSelect.defaultQuestion()
+    act(() => {
+      result.current.addQuestion(q1)
+      result.current.addQuestion(q2)
+    })
+    act(() => {
+      result.current.reorderQuestions(0, 1)
+    })
+    expect(result.current.survey.questions[0].id).toBe(q2.id)
+    expect(result.current.survey.questions[1].id).toBe(q1.id)
+  })
+
+  it('addBranchingRule appends a rule', () => {
+    const { result } = renderHook(() => useSurvey(), { wrapper: SurveyProvider })
+    const rule = { id: 'br1', sourceQuestionId: 'q1', answerId: 'a1', targetQuestionId: 'q3' }
+    act(() => {
+      result.current.addBranchingRule(rule)
+    })
+    expect(result.current.survey.branchingRules).toHaveLength(1)
+    expect(result.current.survey.branchingRules[0]).toEqual(rule)
+  })
+
+  it('deleteBranchingRule removes the rule by id', () => {
+    const { result } = renderHook(() => useSurvey(), { wrapper: SurveyProvider })
+    const rule = { id: 'br1', sourceQuestionId: 'q1', answerId: 'a1', targetQuestionId: 'q3' }
+    act(() => {
+      result.current.addBranchingRule(rule)
+    })
+    act(() => {
+      result.current.deleteBranchingRule('br1')
+    })
+    expect(result.current.survey.branchingRules).toHaveLength(0)
+  })
+
+  it('updateBranchingRule updates a field on the matching rule', () => {
+    const { result } = renderHook(() => useSurvey(), { wrapper: SurveyProvider })
+    const rule = { id: 'br1', sourceQuestionId: 'q1', answerId: 'a1', targetQuestionId: 'q3' }
+    act(() => {
+      result.current.addBranchingRule(rule)
+    })
+    act(() => {
+      result.current.updateBranchingRule('br1', { targetQuestionId: 'q5' })
+    })
+    expect(result.current.survey.branchingRules[0].targetQuestionId).toBe('q5')
+  })
 })

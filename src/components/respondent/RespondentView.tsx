@@ -110,7 +110,7 @@ export default function RespondentView({ survey }: RespondentViewProps) {
       >
         <ThemeToggle />
       </header>
-      <ProgressBar current={currentIndex + 1} total={questions.length} />
+      <ProgressBar current={Object.keys(answers).length} total={questions.length} />
       <main
         style={{
           flex: 1,

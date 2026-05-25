@@ -70,4 +70,14 @@ describe('QuestionRow', () => {
     render(<QuestionRow question={q} index={0} isActive={false} onSelect={() => {}} onDelete={() => {}} />)
     expect(screen.getByLabelText('Move question 1 down')).toBeDisabled()
   })
+
+  it('shows branching indicator when hasBranchingRule is true', () => {
+    render(<QuestionRow question={q} index={0} isActive={false} onSelect={() => {}} onDelete={() => {}} hasBranchingRule />)
+    expect(screen.getByLabelText('Has branching rule')).toBeInTheDocument()
+  })
+
+  it('hides branching indicator when hasBranchingRule is false', () => {
+    render(<QuestionRow question={q} index={0} isActive={false} onSelect={() => {}} onDelete={() => {}} />)
+    expect(screen.queryByLabelText('Has branching rule')).not.toBeInTheDocument()
+  })
 })

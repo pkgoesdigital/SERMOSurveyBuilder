@@ -3,10 +3,15 @@ import { Trash2, Plus } from 'lucide-react'
 import { useSurvey } from '../../contexts/SurveyContext'
 import { generateId } from '../../lib/utils'
 
-const selectStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '4px 6px',
-  fontSize: 12,
+function clip(text: string, max = 28): string {
+  return text.length > max ? text.slice(0, max) + '…' : text
+}
+
+const pillSelectStyle: React.CSSProperties = {
+  flex: 1,
+  minWidth: 72,
+  padding: '3px 4px',
+  fontSize: 11,
   border: '1px solid var(--color-border)',
   borderRadius: 4,
   background: 'var(--color-bg)',
@@ -70,6 +75,9 @@ export default function BranchingEditor() {
           {rules.map((rule) => {
             const answer = activeQuestion.options?.find((o) => o.id === rule.answerId)
             const targetIdx = survey.questions.findIndex((q) => q.id === rule.targetQuestionId)
+            const answerText = answer?.text ?? 'Unknown'
+            const targetQ = survey.questions[targetIdx]
+            const fullLabel = `If "${answerText}" → Q${targetIdx + 1}${targetQ ? ': ' + targetQ.text : ' (deleted)'}`
             return (
               <div
                 key={rule.id}
@@ -85,15 +93,10 @@ export default function BranchingEditor() {
                 }}
               >
                 <span
-                  style={{
-                    flex: 1,
-                    color: 'var(--color-text)',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
+                  title={fullLabel}
+                  style={{ flex: 1, color: 'var(--color-text)' }}
                 >
-                  If <strong>"{answer?.text ?? 'Unknown'}"</strong> → Q{targetIdx + 1}
+                  If <strong>"{clip(answerText)}"</strong> → Q{targetIdx + 1}
                   {targetIdx === -1 ? ' (deleted)' : ''}
                 </span>
                 <button
@@ -123,59 +126,45 @@ export default function BranchingEditor() {
 
           {isAdding ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <select
-                aria-label="If answer is"
-                value={pendingAnswerId}
-                onChange={(e) => setPendingAnswerId(e.target.value)}
-                style={selectStyle}
-              >
-                <option value="">If answer is…</option>
-                {activeQuestion.options?.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.text || '(empty option)'}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                aria-label="Skip to question"
-                value={pendingTargetId}
-                onChange={(e) => setPendingTargetId(e.target.value)}
-                style={selectStyle}
-              >
-                <option value="">Skip to…</option>
-                {otherQuestions.map((q) => {
-                  const qIdx = survey.questions.findIndex((sq) => sq.id === q.id)
-                  return (
-                    <option key={q.id} value={q.id}>
-                      Q{qIdx + 1}: {q.text || 'Untitled'}
-                    </option>
-                  )
-                })}
-              </select>
-
-              <div style={{ display: 'flex', gap: 6 }}>
-                <button
-                  onClick={handleAdd}
-                  disabled={!pendingAnswerId || !pendingTargetId}
-                  style={{
-                    flex: 1,
-                    padding: '5px 8px',
-                    fontSize: 12,
-                    border: 'none',
-                    borderRadius: 4,
-                    background: 'var(--color-accent)',
-                    color: '#fff',
-                    cursor: pendingAnswerId && pendingTargetId ? 'pointer' : 'not-allowed',
-                    opacity: pendingAnswerId && pendingTargetId ? 1 : 0.5,
-                  }}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 12, color: 'var(--color-text-muted)', flexShrink: 0 }}>If</span>
+                <select
+                  aria-label="If answer is"
+                  value={pendingAnswerId}
+                  onChange={(e) => setPendingAnswerId(e.target.value)}
+                  style={pillSelectStyle}
                 >
-                  Add rule
-                </button>
+                  <option value="">answer…</option>
+                  {activeQuestion.options?.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.text || '(empty)'}
+                    </option>
+                  ))}
+                </select>
+                <span style={{ fontSize: 12, color: 'var(--color-text-muted)', flexShrink: 0 }}>→</span>
+                <select
+                  aria-label="Skip to question"
+                  value={pendingTargetId}
+                  onChange={(e) => setPendingTargetId(e.target.value)}
+                  style={pillSelectStyle}
+                >
+                  <option value="">skip to…</option>
+                  {otherQuestions.map((q) => {
+                    const qIdx = survey.questions.findIndex((sq) => sq.id === q.id)
+                    return (
+                      <option key={q.id} value={q.id}>
+                        Q{qIdx + 1}: {q.text || 'Untitled'}
+                      </option>
+                    )
+                  })}
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
                 <button
                   onClick={handleCancel}
                   style={{
-                    padding: '5px 8px',
+                    padding: '4px 10px',
                     fontSize: 12,
                     border: '1px solid var(--color-border)',
                     borderRadius: 4,
@@ -185,6 +174,22 @@ export default function BranchingEditor() {
                   }}
                 >
                   Cancel
+                </button>
+                <button
+                  onClick={handleAdd}
+                  disabled={!pendingAnswerId || !pendingTargetId}
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: 12,
+                    border: 'none',
+                    borderRadius: 4,
+                    background: 'var(--color-accent)',
+                    color: '#fff',
+                    cursor: pendingAnswerId && pendingTargetId ? 'pointer' : 'not-allowed',
+                    opacity: pendingAnswerId && pendingTargetId ? 1 : 0.5,
+                  }}
+                >
+                  Add
                 </button>
               </div>
             </div>

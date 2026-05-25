@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react'
+import { Trash2, ChevronUp, ChevronDown, GitBranch } from 'lucide-react'
 import type { Question } from '../../lib/types'
 import { questionRegistry } from '../../question-types/registry'
 
@@ -11,6 +11,7 @@ interface QuestionRowProps {
   onDelete: () => void
   onMoveUp?: () => void
   onMoveDown?: () => void
+  hasBranchingRule?: boolean
 }
 
 export default function QuestionRow({
@@ -21,6 +22,7 @@ export default function QuestionRow({
   onDelete,
   onMoveUp,
   onMoveDown,
+  hasBranchingRule,
 }: QuestionRowProps) {
   const def = questionRegistry.find((d) => d.type === question.type)
   const [hovered, setHovered] = useState(false)
@@ -69,6 +71,13 @@ export default function QuestionRow({
         <span style={{ fontSize: 12, color: 'var(--color-text-muted)', flexShrink: 0 }}>
           {index + 1}
         </span>
+        {hasBranchingRule && (
+          <GitBranch
+            size={10}
+            aria-label="Has branching rule"
+            style={{ color: 'var(--color-accent)', flexShrink: 0 }}
+          />
+        )}
         <span
           style={{
             fontSize: 13,

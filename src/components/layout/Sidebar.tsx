@@ -38,6 +38,7 @@ export default function Sidebar() {
               onDelete={() => handleDelete(q.id)}
               onMoveUp={i > 0 ? () => reorderQuestions(i, i - 1) : undefined}
               onMoveDown={i < survey.questions.length - 1 ? () => reorderQuestions(i, i + 1) : undefined}
+              hasBranchingRule={survey.branchingRules.some((r) => r.sourceQuestionId === q.id)}
             />
           </li>
         ))}

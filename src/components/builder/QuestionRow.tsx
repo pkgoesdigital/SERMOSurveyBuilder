@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Trash2, ChevronUp, ChevronDown, GitBranch } from 'lucide-react'
 import type { Question } from '../../lib/types'
 import { questionRegistry } from '../../question-types/registry'
 
@@ -9,6 +9,9 @@ interface QuestionRowProps {
   isActive: boolean
   onSelect: () => void
   onDelete: () => void
+  onMoveUp?: () => void
+  onMoveDown?: () => void
+  hasBranchingRule?: boolean
 }
 
 export default function QuestionRow({
@@ -17,6 +20,9 @@ export default function QuestionRow({
   isActive,
   onSelect,
   onDelete,
+  onMoveUp,
+  onMoveDown,
+  hasBranchingRule,
 }: QuestionRowProps) {
   const def = questionRegistry.find((d) => d.type === question.type)
   const [hovered, setHovered] = useState(false)
@@ -65,6 +71,13 @@ export default function QuestionRow({
         <span style={{ fontSize: 12, color: 'var(--color-text-muted)', flexShrink: 0 }}>
           {index + 1}
         </span>
+        {hasBranchingRule && (
+          <GitBranch
+            size={10}
+            aria-label="Has branching rule"
+            style={{ color: 'var(--color-accent)', flexShrink: 0 }}
+          />
+        )}
         <span
           style={{
             fontSize: 13,
@@ -78,6 +91,38 @@ export default function QuestionRow({
         </span>
       </button>
 
+      {(['up', 'down'] as const).map((dir) => {
+        const handler = dir === 'up' ? onMoveUp : onMoveDown
+        const Icon = dir === 'up' ? ChevronUp : ChevronDown
+        const label = dir === 'up' ? `Move question ${index + 1} up` : `Move question ${index + 1} down`
+        return (
+          <button
+            key={dir}
+            aria-label={label}
+            onClick={(e) => { e.stopPropagation(); handler?.() }}
+            disabled={!handler}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              width: 22,
+              height: 32,
+              border: 'none',
+              borderRadius: 4,
+              background: 'transparent',
+              color: 'var(--color-text-muted)',
+              cursor: handler ? 'pointer' : 'default',
+              opacity: hovered ? (handler ? 1 : 0.25) : 0,
+              transition: 'opacity 0.15s',
+              pointerEvents: hovered && handler ? 'auto' : 'none',
+            }}
+          >
+            <Icon size={12} />
+          </button>
+        )
+      })}
+
       <button
         aria-label={`Delete question ${index + 1}`}
         onClick={(e) => { e.stopPropagation(); onDelete() }}
@@ -86,7 +131,7 @@ export default function QuestionRow({
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
-          width: 32,
+          width: 28,
           height: 32,
           marginRight: 4,
           border: 'none',

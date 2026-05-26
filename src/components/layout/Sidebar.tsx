@@ -3,7 +3,7 @@ import QuestionRow from '../builder/QuestionRow'
 import AddQuestionMenu from '../builder/AddQuestionMenu'
 
 export default function Sidebar() {
-  const { survey, activeQuestionId, setActiveQuestionId, deleteQuestion } = useSurvey()
+  const { survey, activeQuestionId, setActiveQuestionId, deleteQuestion, reorderQuestions } = useSurvey()
 
   function handleDelete(id: string) {
     if (activeQuestionId === id) {
@@ -36,6 +36,9 @@ export default function Sidebar() {
               isActive={q.id === activeQuestionId}
               onSelect={() => setActiveQuestionId(q.id)}
               onDelete={() => handleDelete(q.id)}
+              onMoveUp={i > 0 ? () => reorderQuestions(i, i - 1) : undefined}
+              onMoveDown={i < survey.questions.length - 1 ? () => reorderQuestions(i, i + 1) : undefined}
+              hasBranchingRule={survey.branchingRules.some((r) => r.sourceQuestionId === q.id)}
             />
           </li>
         ))}

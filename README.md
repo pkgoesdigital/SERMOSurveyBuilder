@@ -18,7 +18,7 @@ A physician survey builder prototype built for the Sermo take-home assignment. R
 
 ```bash
 git clone <repo-url>
-cd sermo-survey-builder
+cd SERMOSurveyBuilder
 npm install
 ```
 

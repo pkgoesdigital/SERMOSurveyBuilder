@@ -258,6 +258,11 @@ Route: `/respond/:surveyId`
 5. `npm run build` must pass before any commit
 6. All interactive elements: minimum 44×44px touch target (mobile-first)
 7. ARIA labels on all controls (`aria-label`, `role`, `aria-checked` where applicable)
+8. **Rules of Hooks — always enforced, never negotiated:**
+   - All `useState`, `useEffect`, `useRef`, `useMemo`, `useCallback`, and any other hook calls must appear at the **top of the function body**, before any `if`, `return`, loop, or nested function.
+   - Never place a hook call after a conditional early return. Guard clauses (`if (!x) return ...`) always come **after** all hook declarations.
+   - Never call hooks inside event handlers, callbacks, or helper functions defined inside a component.
+   - This rule is unconditional — no exceptions for "simple" cases or "obvious" guards. Code that violates it will not be written or accepted.
 
 ---
 

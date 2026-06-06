@@ -176,6 +176,7 @@ export const grid: QuestionTypeDefinition = {
   label: 'Grid',
   icon: 'grid-3x3',
   color: 'var(--type-color-grid)',
+  singleSelection: false,
 
   defaultQuestion: (): Question => ({
     id: generateId(),

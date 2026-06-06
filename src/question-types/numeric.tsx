@@ -86,6 +86,7 @@ export const numeric: QuestionTypeDefinition = {
   label: 'Numeric',
   icon: 'hash',
   color: 'var(--type-color-numeric)',
+  singleSelection: false,
 
   defaultQuestion: (): Question => ({
     id: generateId(),

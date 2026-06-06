@@ -98,6 +98,7 @@ export const singleSelect: QuestionTypeDefinition = {
   label: 'Single Select',
   icon: 'circle-dot',
   color: 'var(--type-color-single)',
+  singleSelection: true,
 
   defaultQuestion: (): Question => ({
     id: generateId(),

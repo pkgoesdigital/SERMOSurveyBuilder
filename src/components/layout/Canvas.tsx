@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useSurvey } from '../../contexts/SurveyContext'
 import { getTypeDefinition } from '../../question-types/registry'
 import EmptyState from '../shared/EmptyState'
@@ -8,12 +8,19 @@ export default function Canvas() {
   const activeQuestion = survey.questions.find((q) => q.id === activeQuestionId)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
+  // Local preview state — lets the canvas show interactive selection feedback
+  // while building. Must be declared before any early return (Rules of Hooks).
+  const [previewValue, setPreviewValue] = useState<string | string[] | null>(null)
+
   useEffect(() => {
     const el = textareaRef.current
     if (!el) return
     el.style.height = 'auto'
     el.style.height = el.scrollHeight + 'px'
   }, [activeQuestion?.text, activeQuestionId])
+
+  // Reset preview selection whenever the active question changes
+  useEffect(() => { setPreviewValue(null) }, [activeQuestionId])
 
   if (!activeQuestion) {
     return (
@@ -80,8 +87,8 @@ export default function Canvas() {
         />
         <def.RespondentInput
           question={activeQuestion}
-          value={null}
-          onChange={() => {}}
+          value={previewValue}
+          onChange={(v) => setPreviewValue(v)}
         />
       </div>
     </main>

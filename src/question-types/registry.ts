@@ -4,12 +4,15 @@ import { singleSelect } from './single-select'
 import { multiSelect } from './multi-select'
 import { numeric } from './numeric'
 import { grid } from './grid'
+import { mapUsState } from './map-us-state'
 
 export type QuestionTypeDefinition = {
   type: string                                    // unique key e.g. 'single-select'
   label: string                                   // e.g. 'Single Select'
   icon: string                                    // lucide icon name e.g. 'circle-dot'
   color: string                                   // CSS var e.g. 'var(--type-color-single)'
+  /** True = one selection auto-advances (no Continue button). False = needs explicit Continue. */
+  singleSelection: boolean
   defaultQuestion: () => Question                 // factory for new questions of this type
   BuilderEditor: React.FC<EditorProps>            // answer config UI in PropertiesPanel
   RespondentInput: React.FC<InputProps>           // answer UI in RespondentView
@@ -33,6 +36,7 @@ export const questionRegistry: QuestionTypeDefinition[] = [
   multiSelect,
   numeric,
   grid,
+  mapUsState,
 ]
 
 export const getTypeDefinition = (type: string): QuestionTypeDefinition => {

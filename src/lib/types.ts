@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 
-export type QuestionType = 'single-select' | 'multi-select' | 'numeric' | 'grid'
+export type QuestionType = 'single-select' | 'multi-select' | 'numeric' | 'grid' | 'map-us-state'
 
 export type Option = {
   id: string
@@ -51,6 +51,15 @@ export type InputProps = {
   value: string | string[] | null
   onChange: (value: string | string[]) => void
   onAutoAdvance?: () => void  // called immediately on selection (single-select)
+}
+
+// Survey response — one record per respondent session
+export type SurveyResponse = {
+  id: string                                    // surveyId_sessionToken
+  surveyId: string
+  sessionToken: string
+  answers: Record<string, string | string[]>   // questionId → selected value(s)
+  submittedAt: string                           // ISO timestamp
 }
 
 // Keep ComponentType available for registry without React namespace

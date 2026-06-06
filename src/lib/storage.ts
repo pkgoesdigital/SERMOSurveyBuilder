@@ -1,8 +1,9 @@
-import { doc, setDoc, getDoc, getDocs, deleteDoc, collection } from 'firebase/firestore'
+import { doc, setDoc, getDoc, getDocs, deleteDoc, collection, query, where } from 'firebase/firestore'
 import { db } from './firebase'
-import type { Survey } from './types'
+import type { Survey, SurveyResponse } from './types'
 
 const COLLECTION = 'surveys'
+const RESPONSES_COLLECTION = 'responses'
 
 export const storage = {
   async saveSurvey(survey: Survey): Promise<void> {
@@ -26,5 +27,24 @@ export const storage = {
 
   async deleteSurvey(id: string): Promise<void> {
     await deleteDoc(doc(db, COLLECTION, id))
+  },
+
+  // ── Survey responses ────────────────────────────────────────
+  // Document ID is surveyId_sessionToken — upsert semantics so re-submitting
+  // the same session overwrites rather than duplicates.
+
+  async saveResponse(response: SurveyResponse): Promise<void> {
+    await setDoc(doc(db, RESPONSES_COLLECTION, response.id), response)
+  },
+
+  async loadResponses(surveyId: string): Promise<SurveyResponse[]> {
+    const q = query(
+      collection(db, RESPONSES_COLLECTION),
+      where('surveyId', '==', surveyId),
+    )
+    const snap = await getDocs(q)
+    return snap.docs
+      .map((d) => d.data() as SurveyResponse)
+      .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
   },
 }

@@ -114,6 +114,7 @@ export const multiSelect: QuestionTypeDefinition = {
   label: 'Multi Select',
   icon: 'check-square',
   color: 'var(--type-color-multi)',
+  singleSelection: false,
 
   defaultQuestion: (): Question => ({
     id: generateId(),
